@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>こえログ | 声でわかるストレス傾向チェック</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+ 
+<div class="sky">
+  <div class="stars"></div>
+</div>
+ 
+<main class="phone">
+ 
+  <!-- ナビ（ヘッダー） -->
+  <header class="topbar">
+    <span class="brand">こえログ</span>
+    <div class="nav-actions">
+      <button class="icon-btn" id="btn-history" aria-label="週間の変化を見る">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V10M11 19V5M18 19v-7"/></svg>
+      </button>
+      <button class="icon-btn" id="btn-settings" aria-label="設定を開く">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a7.9 7.9 0 000-2l2-1.5-2-3.5-2.3.7a8 8 0 00-1.7-1L15 3h-4l-.4 2.7a8 8 0 00-1.7 1l-2.3-.7-2 3.5L6.6 11a7.9 7.9 0 000 2l-2 1.5 2 3.5 2.3-.7a8 8 0 001.7 1L11 21h4l.4-2.7a8 8 0 001.7-1l2.3.7 2-3.5-2-1.5z"/></svg>
+      </button>
+    </div>
+  </header>
+ 
+  <!-- 進捗ドット -->
+  <div class="progress-dots" id="progress-dots" aria-hidden="true">
+    <span class="dot" data-step="1"></span>
+    <span class="dot" data-step="2"></span>
+    <span class="dot" data-step="3"></span>
+    <span class="dot" data-step="4"></span>
+  </div>
+ 
+  <!-- ===================== SCREEN 1: イントロ / 録音前 ===================== -->
+  <section class="screen is-active" id="screen-intro" data-screen="1">
+    <div class="orb-stage">
+      <div class="orb orb--idle" id="orb-intro"><div class="orb-core"></div></div>
+    </div>
+    <p class="eyebrow">今日のこえチェック</p>
+    <h1 class="prompt-text">今日あったことを、<br>そのまま話してみてください</h1>
+    <p class="sub-text">10〜20秒ほどで大丈夫。うまく話そうとしなくて平気です。</p>
+    <button class="primary-btn" id="btn-start-record">
+      <span class="mic-icon" aria-hidden="true"></span>
+      話しはじめる
+    </button>
+    <p class="foot-note">声はその場で解析され、保存されません</p>
+  </section>
+ 
+  <!-- ===================== SCREEN 2: 録音中 ===================== -->
+  <section class="screen" id="screen-record" data-screen="2">
+    <div class="orb-stage">
+      <div class="orb orb--recording" id="orb-record">
+        <div class="orb-core"></div>
+        <div class="wave-bars" id="wave-bars"></div>
+      </div>
+    </div>
+    <p class="eyebrow">聞いています</p>
+    <p class="timer" id="record-timer">0:00</p>
+    <p class="sub-text" id="record-hint">今の気分は、どうですか？</p>
+    <button class="primary-btn primary-btn--stop" id="btn-stop-record">話し終わった</button>
+  </section>
+ 
+  <!-- ===================== SCREEN 3: 解析中 ===================== -->
+  <section class="screen" id="screen-analyze" data-screen="3">
+    <div class="orb-stage">
+      <div class="orb orb--analyzing" id="orb-analyze"><div class="orb-core"></div></div>
+    </div>
+    <p class="eyebrow">こえを解析しています</p>
+    <ul class="analyze-list" id="analyze-list">
+      <li data-key="speed">話す速さ</li>
+      <li data-key="pitch">声の高さ</li>
+      <li data-key="volume">声の大きさ</li>
+      <li data-key="tone">抑揚</li>
+      <li data-key="pause">間の取り方</li>
+    </ul>
+  </section>
+ 
+  <!-- ===================== SCREEN 4: 結果 ===================== -->
+  <section class="screen" id="screen-result" data-screen="4">
+    <div class="orb-stage orb-stage--result">
+      <div class="orb orb--result" id="orb-result"><div class="orb-core"></div></div>
+      <p class="result-label" id="result-label">ストレス低め</p>
+    </div>
+ 
+    <p class="ai-comment" id="ai-comment">今日は落ち着いた声のトーンでした。この調子で過ごせるといいですね。</p>
+ 
+    <div class="card" id="card-recommend">
+      <p class="card-title">今のあなたにおすすめ</p>
+      <ul class="recommend-list" id="recommend-list"></ul>
+    </div>
+ 
+    <div class="card" id="card-music">
+      <p class="card-title">気分に合う音楽</p>
+      <div class="chip-row" id="music-chips"></div>
+    </div>
+ 
+    <div class="card" id="card-weather">
+      <p class="card-title">今日の天気に合わせて</p>
+      <p class="weather-line" id="weather-line"></p>
+    </div>
+ 
+    <button class="primary-btn primary-btn--ghost" id="btn-retry">もう一度チェックする</button>
+  </section>
+ 
+  <!-- ===================== SCREEN 5: 週間の変化 ===================== -->
+  <section class="screen" id="screen-history" data-screen="history">
+    <div class="history-head">
+      <button class="icon-back" id="btn-back-from-history" aria-label="戻る">←</button>
+      <p class="eyebrow">今週のストレス傾向</p>
+    </div>
+    <div class="chart" id="week-chart"></div>
+    <p class="ai-comment" id="week-comment"></p>
+    <button class="primary-btn primary-btn--ghost" id="btn-back-to-intro">チェック画面に戻る</button>
+  </section>
+ 
+  <!-- ===================== SCREEN 6: 設定 ===================== -->
+  <section class="screen" id="screen-settings" data-screen="settings">
+    <div class="history-head">
+      <button class="icon-back" id="btn-back-from-settings" aria-label="戻る">←</button>
+      <p class="eyebrow">設定</p>
+    </div>
+ 
+    <div class="card setting-card">
+      <div class="setting-row">
+        <div>
+          <p class="setting-label">チェックのリマインド</p>
+          <p class="setting-desc">1日1回、こえチェックの通知を送ります</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggle-reminder">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+ 
+    <div class="card setting-card">
+      <div class="setting-row">
+        <div>
+          <p class="setting-label">声の特徴量を保存</p>
+          <p class="setting-desc">音声そのものは保存されません。傾向グラフの精度が上がります</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggle-save-voice">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+ 
+    <div class="card setting-card">
+      <p class="setting-label" style="margin-bottom:6px">平常時の声を登録する</p>
+      <p class="setting-desc" style="margin-bottom:12px">10秒ほど話すだけで、あなたの基準の声を覚えます</p>
+      <button class="primary-btn primary-btn--ghost" id="btn-baseline" style="width:100%;justify-content:center;margin-top:0">平常時の声を登録する</button>
+    </div>
+ 
+    <p class="foot-note" style="margin-top:8px">こえログ v0.1 ・ ストレス傾向の見える化を目的としたセルフケアアプリです</p>
+  </section>
+ 
+</main>
+ 
+<script src="script.js"></script>
+</body>
+</html>
