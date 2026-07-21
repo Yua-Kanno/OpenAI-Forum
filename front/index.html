@@ -10,13 +10,13 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
- 
+
 <div class="sky">
   <div class="stars"></div>
 </div>
- 
+
 <main class="phone">
- 
+
   <!-- ナビ（ヘッダー） -->
   <header class="topbar">
     <span class="brand">こえログ</span>
@@ -29,7 +29,7 @@
       </button>
     </div>
   </header>
- 
+
   <!-- 進捗ドット -->
   <div class="progress-dots" id="progress-dots" aria-hidden="true">
     <span class="dot" data-step="1"></span>
@@ -37,7 +37,7 @@
     <span class="dot" data-step="3"></span>
     <span class="dot" data-step="4"></span>
   </div>
- 
+
   <!-- ===================== SCREEN 1: イントロ / 録音前 ===================== -->
   <section class="screen is-active" id="screen-intro" data-screen="1">
     <div class="orb-stage">
@@ -52,7 +52,7 @@
     </button>
     <p class="foot-note">声はその場で解析され、保存されません</p>
   </section>
- 
+
   <!-- ===================== SCREEN 2: 録音中 ===================== -->
   <section class="screen" id="screen-record" data-screen="2">
     <div class="orb-stage">
@@ -66,7 +66,7 @@
     <p class="sub-text" id="record-hint">今の気分は、どうですか？</p>
     <button class="primary-btn primary-btn--stop" id="btn-stop-record">話し終わった</button>
   </section>
- 
+
   <!-- ===================== SCREEN 3: 解析中 ===================== -->
   <section class="screen" id="screen-analyze" data-screen="3">
     <div class="orb-stage">
@@ -81,34 +81,46 @@
       <li data-key="pause">間の取り方</li>
     </ul>
   </section>
- 
+
   <!-- ===================== SCREEN 4: 結果 ===================== -->
   <section class="screen" id="screen-result" data-screen="4">
     <div class="orb-stage orb-stage--result">
       <div class="orb orb--result" id="orb-result"><div class="orb-core"></div></div>
       <p class="result-label" id="result-label">ストレス低め</p>
     </div>
- 
+
     <p class="ai-comment" id="ai-comment">今日は落ち着いた声のトーンでした。この調子で過ごせるといいですね。</p>
- 
+
+    <div class="card companion-card" id="card-companion">
+      <div class="companion-row">
+        <div class="companion-avatar"></div>
+        <div class="companion-info">
+          <p class="companion-name">たね・1日目</p>
+          <p class="companion-next">次の成長まであと2日</p>
+          <div class="companion-bar"><div class="companion-bar-fill"></div></div>
+        </div>
+      </div>
+    </div>
+
     <div class="card" id="card-recommend">
       <p class="card-title">今のあなたにおすすめ</p>
       <ul class="recommend-list" id="recommend-list"></ul>
     </div>
- 
+
     <div class="card" id="card-music">
       <p class="card-title">気分に合う音楽</p>
-      <div class="chip-row" id="music-chips"></div>
+      <p class="music-caption" id="music-caption"></p>
+      <div class="music-embed-wrap" id="music-embed-wrap"></div>
     </div>
- 
+
     <div class="card" id="card-weather">
       <p class="card-title">今日の天気に合わせて</p>
       <p class="weather-line" id="weather-line"></p>
     </div>
- 
+
     <button class="primary-btn primary-btn--ghost" id="btn-retry">もう一度チェックする</button>
   </section>
- 
+
   <!-- ===================== SCREEN 5: 週間の変化 ===================== -->
   <section class="screen" id="screen-history" data-screen="history">
     <div class="history-head">
@@ -119,14 +131,26 @@
     <p class="ai-comment" id="week-comment"></p>
     <button class="primary-btn primary-btn--ghost" id="btn-back-to-intro">チェック画面に戻る</button>
   </section>
- 
+
   <!-- ===================== SCREEN 6: 設定 ===================== -->
   <section class="screen" id="screen-settings" data-screen="settings">
     <div class="history-head">
       <button class="icon-back" id="btn-back-from-settings" aria-label="戻る">←</button>
       <p class="eyebrow">設定</p>
     </div>
- 
+
+    <div class="card companion-card">
+      <p class="setting-label" style="margin-bottom:10px">育成コンパニオン</p>
+      <div class="companion-row">
+        <div class="companion-avatar"></div>
+        <div class="companion-info">
+          <p class="companion-name">たね・1日目</p>
+          <p class="companion-next">次の成長まであと2日</p>
+          <div class="companion-bar"><div class="companion-bar-fill"></div></div>
+        </div>
+      </div>
+    </div>
+
     <div class="card setting-card">
       <div class="setting-row">
         <div>
@@ -139,7 +163,28 @@
         </label>
       </div>
     </div>
- 
+
+    <div class="card setting-card">
+      <p class="setting-label" style="margin-bottom:10px">プロフィール（任意）</p>
+      <p class="setting-desc" style="margin-bottom:10px">声の特徴には年代・性別で個人差があるため、入力すると判定の精度向上に使われます。答えたくない項目は「回答しない」のままでOKです。</p>
+      <label class="field-label" for="profile-age">年代</label>
+      <select class="field-select" id="profile-age">
+        <option value="unknown">回答しない</option>
+        <option value="teens">10代</option>
+        <option value="20s">20代</option>
+        <option value="30s">30代</option>
+        <option value="40s">40代</option>
+        <option value="50s">50代以上</option>
+      </select>
+      <label class="field-label" for="profile-gender" style="margin-top:10px">性別</label>
+      <select class="field-select" id="profile-gender">
+        <option value="unknown">回答しない</option>
+        <option value="female">女性</option>
+        <option value="male">男性</option>
+        <option value="other">その他</option>
+      </select>
+    </div>
+
     <div class="card setting-card">
       <div class="setting-row">
         <div>
@@ -152,18 +197,18 @@
         </label>
       </div>
     </div>
- 
+
     <div class="card setting-card">
       <p class="setting-label" style="margin-bottom:6px">平常時の声を登録する</p>
       <p class="setting-desc" style="margin-bottom:12px">10秒ほど話すだけで、あなたの基準の声を覚えます</p>
       <button class="primary-btn primary-btn--ghost" id="btn-baseline" style="width:100%;justify-content:center;margin-top:0">平常時の声を登録する</button>
     </div>
- 
+
     <p class="foot-note" style="margin-top:8px">こえログ v0.1 ・ ストレス傾向の見える化を目的としたセルフケアアプリです</p>
   </section>
- 
+
 </main>
- 
+
 <script src="script.js"></script>
 </body>
 </html>
