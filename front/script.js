@@ -285,15 +285,14 @@ function renderWeekChart() {
 // =========================================================
 // Apple Music 埋め込み（Developer Program不要の埋め込みプレイヤー方式）
 // =========================================================
-// 各ジャンルに対応する Apple Music の共有リンクをここに貼るだけでOK。
-// 取得方法: Apple Musicアプリ/サイトでプレイリストを開く → 「シェア」→「リンクをコピー」
-// ここでは仮のプレースホルダーを入れているので、実際のリンクに差し替えてください。
+// 各ジャンルに対応する Apple Music の共有リンク（日本版の公式プレイリスト）
+// 気に入らなければ、Apple Musicアプリでプレイリストを開き「シェア」→「リンクをコピー」で差し替え可能
 const MUSIC_EMBED_LINKS = {
-  "落ち着くピアノ": "https://music.apple.com/us/playlist/peaceful-piano/pl.5ee8333dbe944d9f9151e97d92d1ead9",
-  "自然音": "https://music.apple.com/us/playlist/nature-sounds/pl.acc464ff825340d3a166a1039001284e",
-  "Lo-fi": "https://music.apple.com/us/playlist/lo-fi-beats/pl.5ee8333dbe944d9f9151e97d92d1ead9",
-  "リラックス系ボーカル": "https://music.apple.com/us/playlist/acoustic-chill/pl.5ee8333dbe944d9f9151e97d92d1ead9",
-  "ヒーリングミュージック": "https://music.apple.com/us/playlist/pure-massage/pl.5ee8333dbe944d9f9151e97d92d1ead9",
+  "落ち着くピアノ": "https://music.apple.com/jp/playlist/心穏やかになるピアノ音楽/pl.37383766a6784fee8f303b5067b899b9",
+  "自然音": "https://music.apple.com/jp/playlist/オーシャンサウンド/pl.1321db8d70d64d389e9ffb9e875933fe",
+  "Lo-fi": "https://music.apple.com/jp/playlist/lo-fi-japan/pl.38eb70f47b834187a21cf4e8e5833f35",
+  "リラックス系ボーカル": "https://music.apple.com/jp/playlist/リラックス/pl.5cc71a7325f8405c8c420ea382d66040",
+  "ヒーリングミュージック": "https://music.apple.com/jp/playlist/ベスト-オブ-ヒーリング-ミュージック/pl.030445494eae405da337422464acc8e6",
 };
 
 function toEmbedUrl(appleMusicUrl) {
@@ -338,9 +337,9 @@ const GROWTH_STAGES = [
 function loadStreak() {
   try {
     const raw = localStorage.getItem(STREAK_KEY);
-    return raw ? JSON.parse(raw) : { count: 0, lastDate: null };
+    return raw ? JSON.parse(raw) : { count: 0, lastDate: null, nickname: "" };
   } catch (e) {
-    return { count: 0, lastDate: null };
+    return { count: 0, lastDate: null, nickname: "" };
   }
 }
 
@@ -408,12 +407,15 @@ function renderCompanion(count) {
   }
 
   const info = getStageInfo(count);
+  const nickname = loadStreak().nickname;
+  const displayName = nickname && nickname.trim() ? nickname.trim() : info.stage.label;
+
   document.querySelectorAll(".companion-avatar").forEach((el) => {
     el.style.opacity = "";
     el.className = `companion-avatar ${info.stage.cssClass}`;
   });
   document.querySelectorAll(".companion-name").forEach((el) => {
-    el.textContent = `${info.stage.label}・${count}日目`;
+    el.textContent = `${displayName}・${count}日目`;
   });
   document.querySelectorAll(".companion-next").forEach((el) => {
     el.textContent =
@@ -467,6 +469,15 @@ function initSettingsScreen() {
   const baselineBtn = document.getElementById("btn-baseline");
   const ageSelect = document.getElementById("profile-age");
   const genderSelect = document.getElementById("profile-gender");
+  const nicknameInput = document.getElementById("companion-nickname");
+
+  nicknameInput.value = loadStreak().nickname || "";
+  nicknameInput.addEventListener("change", () => {
+    const streak = loadStreak();
+    streak.nickname = nicknameInput.value.slice(0, 12);
+    saveStreak(streak);
+    renderCompanion(streak.count);
+  });
 
   reminderToggle.checked = settings.reminder;
   saveVoiceToggle.checked = settings.saveVoice;
